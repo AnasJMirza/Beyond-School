@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import OnBoard from "../screens/OnBoard";
@@ -8,7 +8,7 @@ import Signup from "../screens/Signup";
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
-  const [isFirstLaunch, setIsFirstLaunch] = React.useState(false);
+  const [isFirstLaunch, setIsFirstLaunch] = useState(false);
   let routeName;
 //   React.useEffect(() => {
 //     AsyncStorage.getItem("alreadyLaunched").then((value) => {
@@ -30,7 +30,7 @@ const AuthStack = () => {
   }
 
   return (
-    <Stack.Navigator initialRouteName={'login'}>
+    <Stack.Navigator initialRouteName={routeName}>
       <Stack.Screen
         name="onBoard"
         component={OnBoard}

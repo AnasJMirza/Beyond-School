@@ -6,14 +6,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormInput from "../components/FormInput";
 import Line from "../components/Line";
 import SocialButton from "../components/SocialButton";
 import FormButton from "../components/FormButton";
+import { AuthContext } from "../navigation/AuthProvider";
 
 const Signup = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { register } = useContext(AuthContext);
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
@@ -30,15 +35,21 @@ const Signup = ({ navigation }) => {
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
+          defaultValue={'anas'}
+          onChangeText={(email) => setEmail(email)}
         />
-        <FormInput placeholder="Password" secureTextEntry={true} />
+        <FormInput
+          placeholder="Password"
+          secureTextEntry={true}
+          onChangeText={(password) => setPassword(password)}
+        />
         <FormInput placeholder="Confirm Password" secureTextEntry={true} />
         <TouchableOpacity style={styles.recoverPasswordTextWrapper}>
           <Text
             style={styles.recoverPasswordText}
             onPress={() => alert("Terms and services")}
           >
-            By registering, you confirm that you accept our Text{" "}
+            By registering, you confirm that you accept our{" "}
             <Text style={styles.specialColorText}>term of service</Text> and{" "}
             <Text
               style={styles.specialColorText}
@@ -49,7 +60,10 @@ const Signup = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <FormButton title="Register" />
+        <FormButton title="Register" onPress={(e) => {
+            e.preventDefault();
+            register(email, password);
+        }} />
 
         <Line />
 
@@ -100,6 +114,8 @@ const styles = StyleSheet.create({
 
   recoverPasswordTextWrapper: {
     width: "100%",
+    paddingHorizontal: 30,
+    paddingVertical: 5,
   },
 
   recoverPasswordText: {
