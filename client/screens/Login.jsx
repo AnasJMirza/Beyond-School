@@ -15,11 +15,11 @@ import Line from "../components/Line";
 
 import { useForm, Controller } from "react-hook-form";
 import { AuthContext } from "../navigation/AuthProvider";
+import { Platform } from "react-native";
 
 const Login = ({ navigation }) => {
-
   const { login } = useContext(AuthContext);
-  
+
   const {
     control,
     handleSubmit,
@@ -86,9 +86,7 @@ const Login = ({ navigation }) => {
         />
         {errors.password && (
           <View style={{ width: "100%", marginTop: -8 }}>
-            <Text style={styles.errorText}>
-              must be 8 characters long.
-            </Text>
+            <Text style={styles.errorText}>must be 8 characters long.</Text>
           </View>
         )}
         <TouchableOpacity style={styles.recoverPasswordTextWrapper}>
@@ -99,14 +97,18 @@ const Login = ({ navigation }) => {
 
         <Line />
 
-        <SocialButton
-          title="Sign In with Google"
-          iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
-        />
-        <SocialButton
-          title="Sign In with Facebook"
-          iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
-        />
+        {Platform.OS === "android" && (
+          <>
+            <SocialButton
+              title="Sign In with Google"
+              iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
+            />
+            <SocialButton
+              title="Sign In with Facebook"
+              iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
+            />
+          </>
+        )}
 
         <View style={styles.registerContainer}>
           <Text>Not a member</Text>

@@ -17,5 +17,5 @@ web-build/
 .metro-health-check*
 
 
-/clinet/.env
-/server/.env
+.env
+

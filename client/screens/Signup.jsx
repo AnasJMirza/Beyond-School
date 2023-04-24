@@ -1,5 +1,6 @@
 import {
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -35,7 +36,7 @@ const Signup = ({ navigation }) => {
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
-          defaultValue={'anas'}
+          defaultValue={"anas"}
           onChangeText={(email) => setEmail(email)}
         />
         <FormInput
@@ -60,21 +61,28 @@ const Signup = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <FormButton title="Register" onPress={(e) => {
+        <FormButton
+          title="Register"
+          onPress={(e) => {
             e.preventDefault();
             register(email, password);
-        }} />
+          }}
+        />
 
         <Line />
 
-        <SocialButton
-          title="Sign up with Google"
-          iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
-        />
-        <SocialButton
-          title="Sign up with Facebook"
-          iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
-        />
+        {Platform.OS === "android" && (
+          <>
+            <SocialButton
+              title="Sign up with Google"
+              iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
+            />
+            <SocialButton
+              title="Sign up with Facebook"
+              iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
+            />
+          </>
+        )}
 
         <View style={styles.registerContainer}>
           <Text>Already have a account?</Text>
