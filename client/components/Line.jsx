@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Line = () => {
+const Line = ({ ...rest }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} {...rest}>
         <View style={styles.line}></View>
         <Text>Or continue with</Text>
         <View style={styles.line}></View>

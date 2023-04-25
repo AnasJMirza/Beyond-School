@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormInput from "../components/FormInput";
 import Line from "../components/Line";
@@ -16,12 +16,11 @@ import FormButton from "../components/FormButton";
 import { useToast } from "native-base";
 import axios from "../axios";
 import { Controller, useForm } from "react-hook-form";
-import DropDownPicker from 'react-native-dropdown-picker';
+import DropDownPicker from "react-native-dropdown-picker";
+import { toaster } from "../utils/helper";
 
 const Signup = ({ navigation }) => {
   const toast = useToast();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const {
     control,
@@ -29,115 +28,194 @@ const Signup = ({ navigation }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
-      role: "",
+      role: "mentor",
     },
   });
 
-  const onSubmit = async (data) => console.log(data)
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post("/user/register", data);
+      navigation.navigate("login");
+      const title = "Account Created Successfully";
+      toaster(title, "success", toast)
+    } catch (error) {
+      console.log(error)
+      const title = error?.response?.data?.error;
+      toaster(title, "error", toast)
+    }
+  }
+
+  const [roleOpen, setRoleOpen] = useState(false);
+  const [roleValue, setRoleValue] = useState(null);
+  const [role, setRole] = useState([
+    { label: "Student", value: "student" },
+    { label: "Mentor", value: "mentor" },
+  ]);
 
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.container}>
-        <Image
-          source={require("../assets/main/logo-transparent.png")}
-          style={styles.imageDimensions}
-        />
-        <View>
-          <Text style={styles.heading}>Create Account</Text>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <Image
+        source={require("../assets/main/logo-transparent.png")}
+        style={styles.imageDimensions}
+      />
+      <View>
+        <Text style={styles.heading}>Create Account</Text>
+      </View>
 
-        <Controller
-          name="email"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          aria-invalid={errors.email ? "true" : "false"} 
-          render={({ field: { onChange, onBlur, value } }) => (
-            <FormInput
-              placeholder="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              defaultValue={"anas"}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
+      <Controller
+        name="name"
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <FormInput
+            placeholder="Name"
+            autoCapitalize="none"
+            autoCorrect={false}
+            defaultValue={""}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+       {errors.name && (
+        <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
+          <Text style={styles.errorText}>Name is a required</Text>
+        </View>
+      )}
+
+      <Controller
+        name="email"
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <FormInput
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            defaultValue={"anas"}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+      {errors.email && (
+        <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
+          <Text style={styles.errorText}>Email is a required</Text>
+        </View>
+      )}
+
+      <Controller
+        name="password"
+        control={control}
+        rules={{
+          required: true,
+          minLength: 6,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <FormInput
+            placeholder="Password"
+            secureTextEntry={true}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+      {errors.password && (
+        <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
+          <Text style={styles.errorText}>
+            Password must be 6 character long
+          </Text>
+        </View>
+      )}
+      {/* <FormInput placeholder="Confirm Password" secureTextEntry={true} /> */}
+
+      {/* <Controller
+        name="role"
+        defaultValue=""
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, value } }) => (
+          <View>
+            <DropDownPicker
+              style={styles.dropDown}
+              open={roleOpen}
+              value={roleValue}
+              items={role}
+              setOpen={setRoleOpen}
+              setValue={setRoleValue}
+              setItems={setRole}
+              placeholder="Select Role"
+              onChangeValue={onChange}
             />
-          )}
-        />
-        {errors.email && (
-          <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
-            <Text style={styles.errorText}>{errors.email?.message}</Text>
           </View>
         )}
+      />
 
-        <Controller
-          name="password"
-          control={control}
-          rules={{
-            required: true,
-            minLength: 6,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <FormInput
-              placeholder="Password"
-              secureTextEntry={true}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          />
-          {errors.password && (
-            <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
-              <Text style={styles.errorText}>Password must be 6 character long</Text>
-            </View>
-          )}
-        <FormInput placeholder="Confirm Password" secureTextEntry={true} />
-        <TouchableOpacity style={styles.recoverPasswordTextWrapper}>
-          <Text
-            style={styles.recoverPasswordText}
-            onPress={() => alert("Terms and services")}
-          >
-            By registering, you confirm that you accept our{" "}
-            <Text style={styles.specialColorText}>term of service</Text> and{" "}
-            <Text
-              style={styles.specialColorText}
-              onPress={() => alert("Privay Policy")}
-            >
-              privacy ploicy
-            </Text>
+      {errors.role && (
+        <View style={{ width: "100%", marginBottom: 6, position: 'relative', zIndex: -1 }}>
+          <Text style={styles.errorText}>
+            You must select a role
           </Text>
-        </TouchableOpacity>
-
-        <FormButton title="Register" onPress={handleSubmit(onSubmit)} />
-
-        <Line />
-
-        {Platform.OS === "android" && (
-          <>
-            <SocialButton
-              title="Sign up with Google"
-              iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
-            />
-            <SocialButton
-              title="Sign up with Facebook"
-              iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
-            />
-          </>
-        )}
-
-        <View style={styles.registerContainer}>
-          <Text>Already have a account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("login")}>
-            <Text style={styles.registerText}>Sign in</Text>
-          </TouchableOpacity>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      )} */}
+
+      <TouchableOpacity style={styles.recoverPasswordTextWrapper}>
+        <Text
+          style={styles.recoverPasswordText}
+          onPress={() => alert("Terms and services")}
+        >
+          By registering, you confirm that you accept our{" "}
+          <Text style={styles.specialColorText}>term of service</Text> and{" "}
+          <Text
+            style={styles.specialColorText}
+            onPress={() => alert("Privay Policy")}
+          >
+            privacy ploicy
+          </Text>
+        </Text>
+      </TouchableOpacity>
+
+      <View style={{ position: "relative", zIndex: -1, width: "100%" }}>
+        <FormButton title="Register" onPress={handleSubmit(onSubmit)} />
+      </View>
+
+      <View style={{ position: "relative", zIndex: -1 }}>
+        <Line />
+      </View>
+
+      {Platform.OS === "android" && (
+        <>
+          <SocialButton
+            title="Sign up with Google"
+            iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
+          />
+          <SocialButton
+            title="Sign up with Facebook"
+            iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
+          />
+        </>
+      )}
+
+      <View style={styles.registerContainer}>
+        <Text>Already have a account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("login")}>
+          <Text style={styles.registerText}>Sign in</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -170,6 +248,8 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 30,
     paddingVertical: 5,
+    position: "relative",
+    zIndex: -1,
   },
 
   recoverPasswordText: {
@@ -199,5 +279,9 @@ const styles = StyleSheet.create({
   errorText: {
     color: "#f74444",
     textAlign: "left",
-  }
+  },
+
+  dropDown: {
+    outline: "none",
+  },
 });

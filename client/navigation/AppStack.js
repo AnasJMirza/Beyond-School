@@ -1,21 +1,16 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useContext } from 'react'
+import React, { useContext } from "react";
 import Home from "../screens/Home";
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import HomeScreen from "./HomeScreen";
+import ProfileScreen from "./ProfileScreen";
 
-
-const Stack = createNativeStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 export default function AppStack() {
-
   return (
-    <Stack.Navigator initialRouteName={'home'}>
-      <Stack.Screen
-        name="home"
-        component={Home}
-        options={{ header: () => null }}
-      />
-     
-    </Stack.Navigator>
-  )
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
 }
-

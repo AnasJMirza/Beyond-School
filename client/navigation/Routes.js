@@ -1,19 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
-import { UserContext } from "./index";
 
-
-
+export const UserContext = createContext();
 
 const Routes = () => {
- const { user } = useContext(UserContext);
+  const [user, setUser] = useState(true);
 
   return (
-    <NavigationContainer>
-      {user ? <AppStack /> : <AuthStack />}
-    </NavigationContainer>
+    <UserContext.Provider value={{ user, setUser }}>
+      <NavigationContainer>
+        {user ? <AppStack /> : <AuthStack />}
+      </NavigationContainer>
+    </UserContext.Provider>
   );
 };
 

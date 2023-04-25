@@ -16,7 +16,8 @@ import axios from "../axios";
 import { useForm, Controller } from "react-hook-form";
 import { Platform } from "react-native";
 import { useToast, Spinner, Heading, Box } from "native-base";
-import { UserContext } from "../navigation";
+import { UserContext } from "../navigation/Routes";
+import { toaster } from "../utils/helper";
 
 const Login = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -38,31 +39,12 @@ const Login = ({ navigation }) => {
     try {
       const response = await axios.post("/user/login", data);
       setUser(response?.data?.response);
-      toast.show({
-        render: () => {
-          return (
-            <Box bg="#3edf58" px="2" py="1" rounded="sm" mb={5}>
-              <Heading color="#fff" fontSize="lg">
-                Login Successfull!
-              </Heading>
-            </Box>
-          );
-        },
-        placement: "top",
-      });
+      const title = "Login Successful";
+      toaster(title, "success", toast);
     } catch (error) {
-      toast.show({
-        render: () => {
-          return (
-            <Box bg="#f74444" px="2" py="2" rounded="sm" mb={5}>
-              <Heading color="#fff" fontSize="lg">
-                {error?.response?.data?.error}
-              </Heading>
-            </Box>
-          );
-        },
-        placement: "top",
-      });
+      console.log(error);
+      const title = error?.response?.data;
+      toaster(title, "error", toast);
     } finally {
       setModalVisible(false);
     }
@@ -208,6 +190,7 @@ const styles = StyleSheet.create({
     color: "#333",
     marginVertical: 10,
     textAlign: "center",
+    // fontFamily: "anas",
   },
 
   recoverPasswordTextWrapper: {
