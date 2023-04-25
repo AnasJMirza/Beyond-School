@@ -6,19 +6,22 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormButton from "../components/FormButton";
 import FormInput from "../components/FormInput";
 import SocialButton from "../components/SocialButton";
 import Line from "../components/Line";
-
+import axios from "../axios";
 import { useForm, Controller } from "react-hook-form";
-import { AuthContext } from "../navigation/AuthProvider";
 import { Platform } from "react-native";
+import { useToast, Spinner, Heading, Box } from "native-base";
+import { UserContext } from "../navigation";
 
 const Login = ({ navigation }) => {
-  const { login } = useContext(AuthContext);
+  const [modalVisible, setModalVisible] = useState(false);
+  const toast = useToast();
+  const { setUser } = useContext(UserContext);
 
   const {
     control,
@@ -26,98 +29,159 @@ const Login = ({ navigation }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
-  const onSubmit = (data) => data && login(data?.username, data?.password);
+  const onSubmit = async (data) => {
+    setModalVisible(true);
+    try {
+      const response = await axios.post("/user/login", data);
+      setUser(response?.data?.response);
+      toast.show({
+        render: () => {
+          return (
+            <Box bg="#3edf58" px="2" py="1" rounded="sm" mb={5}>
+              <Heading color="#fff" fontSize="lg">
+                Login Successfull!
+              </Heading>
+            </Box>
+          );
+        },
+        placement: "top",
+      });
+    } catch (error) {
+      toast.show({
+        render: () => {
+          return (
+            <Box bg="#f74444" px="2" py="2" rounded="sm" mb={5}>
+              <Heading color="#fff" fontSize="lg">
+                {error?.response?.data?.error}
+              </Heading>
+            </Box>
+          );
+        },
+        placement: "top",
+      });
+    } finally {
+      setModalVisible(false);
+    }
+  };
 
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.container}>
-        <Image
-          source={require("../assets/main/logo-transparent.png")}
-          style={styles.imageDimensions}
-        />
-        <View>
-          <Text style={styles.heading}>Hello Again!</Text>
+    // <ScrollView>
+    <SafeAreaView style={styles.container}>
+      <Image
+        source={require("../assets/main/logo-transparent.png")}
+        style={styles.imageDimensions}
+      />
+      <View>
+        <Text style={styles.heading}>Hello Again!</Text>
+      </View>
+
+      <Controller
+        name="email"
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <FormInput
+            placeholder="email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+      {errors.email && (
+        <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
+          <Text style={styles.errorText}>Email is required.</Text>
         </View>
+      )}
 
-        <Controller
-          name="username"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <FormInput
-              placeholder="Username"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-        />
-        {errors.username && (
-          <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
-            <Text style={styles.errorText}>This is required.</Text>
-          </View>
+      <Controller
+        name="password"
+        control={control}
+        rules={{
+          required: true,
+          minLength: 8,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <FormInput
+            placeholder="Password"
+            secureTextEntry={true}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
         )}
+      />
+      {errors.password && (
+        <View style={{ width: "100%", marginTop: -8 }}>
+          <Text style={styles.errorText}>
+            Password must be 8 characters long.
+          </Text>
+        </View>
+      )}
+      <TouchableOpacity style={styles.recoverPasswordTextWrapper}>
+        <Text style={styles.recoverPasswordText}>Recover password</Text>
+      </TouchableOpacity>
 
-        <Controller
-          name="password"
-          control={control}
-          rules={{
-            required: true,
-            minLength: 8,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <FormInput
-              placeholder="Password"
-              secureTextEntry={true}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-        />
-        {errors.password && (
-          <View style={{ width: "100%", marginTop: -8 }}>
-            <Text style={styles.errorText}>must be 8 characters long.</Text>
-          </View>
-        )}
-        <TouchableOpacity style={styles.recoverPasswordTextWrapper}>
-          <Text style={styles.recoverPasswordText}>Recover password</Text>
+      <FormButton title="Sign in" onPress={handleSubmit(onSubmit)} />
+
+      <Line />
+
+      {Platform.OS === "android" && (
+        <>
+          <SocialButton
+            title="Sign In with Google"
+            iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
+          />
+          <SocialButton
+            title="Sign In with Facebook"
+            iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
+          />
+        </>
+      )}
+
+      <View style={styles.registerContainer}>
+        <Text>Not a member</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("signup")}>
+          <Text style={styles.registerText}>Register Now</Text>
         </TouchableOpacity>
+      </View>
 
-        <FormButton title="Sign in" onPress={handleSubmit(onSubmit)} />
+      {/* Modal */}
 
-        <Line />
-
-        {Platform.OS === "android" && (
-          <>
-            <SocialButton
-              title="Sign In with Google"
-              iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
-            />
-            <SocialButton
-              title="Sign In with Facebook"
-              iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
-            />
-          </>
-        )}
-
-        <View style={styles.registerContainer}>
-          <Text>Not a member</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-            <Text style={styles.registerText}>Register Now</Text>
-          </TouchableOpacity>
+      {modalVisible && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            // backgroundColor: "#f5f0ff",
+            // opacity: 0.4,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1,
+            direction: "column",
+          }}
+        >
+          <Spinner size="lg" color="#7E57C2" />
+          <Heading color="#7E57C2" fontSize="lg">
+            Loading
+          </Heading>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      )}
+    </SafeAreaView>
+    // </ScrollView>
   );
 };
 

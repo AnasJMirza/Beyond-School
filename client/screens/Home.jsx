@@ -1,14 +1,16 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { AuthContext } from '../navigation/AuthProvider';
+import { UserContext } from '../navigation';
+
 
 const Home = () => {
-    const { logout, user } = useContext(AuthContext);
+  const { user, setUser } = useContext(UserContext);
+  console.log(user);
   return (
     <SafeAreaView style={styles.container}>
       <Text>{user.email}</Text>
-      <Button onPress={()=>logout()} title='logout' />
+      <Button title='logout' onPress={()=>setUser(null)} />
     </SafeAreaView>
   )
 }

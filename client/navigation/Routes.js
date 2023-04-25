@@ -2,22 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
-import { AuthContext } from "./AuthProvider";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { UserContext } from "./index";
+
+
+
 
 const Routes = () => {
-  const { user, setUser } = useContext(AuthContext);
-
-  
-
-  onAuthStateChanged(auth, (user) => {
-    if (user){
-        setUser(user)
-    } else {
-        setUser(null)
-    }
-  });
+ const { user } = useContext(UserContext);
 
   return (
     <NavigationContainer>

@@ -13,13 +13,30 @@ import FormInput from "../components/FormInput";
 import Line from "../components/Line";
 import SocialButton from "../components/SocialButton";
 import FormButton from "../components/FormButton";
-import { AuthContext } from "../navigation/AuthProvider";
+import { useToast } from "native-base";
+import axios from "../axios";
+import { Controller, useForm } from "react-hook-form";
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const Signup = ({ navigation }) => {
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { register } = useContext(AuthContext);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      role: "",
+    },
+  });
+
+  const onSubmit = async (data) => console.log(data)
+
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
@@ -31,19 +48,54 @@ const Signup = ({ navigation }) => {
           <Text style={styles.heading}>Create Account</Text>
         </View>
 
-        <FormInput
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          defaultValue={"anas"}
-          onChangeText={(email) => setEmail(email)}
+        <Controller
+          name="email"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          aria-invalid={errors.email ? "true" : "false"} 
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormInput
+              placeholder="Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              defaultValue={"anas"}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
         />
-        <FormInput
-          placeholder="Password"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
+        {errors.email && (
+          <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
+            <Text style={styles.errorText}>{errors.email?.message}</Text>
+          </View>
+        )}
+
+        <Controller
+          name="password"
+          control={control}
+          rules={{
+            required: true,
+            minLength: 6,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormInput
+              placeholder="Password"
+              secureTextEntry={true}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+          />
+          {errors.password && (
+            <View style={{ width: "100%", marginTop: -8, marginBottom: 6 }}>
+              <Text style={styles.errorText}>Password must be 6 character long</Text>
+            </View>
+          )}
         <FormInput placeholder="Confirm Password" secureTextEntry={true} />
         <TouchableOpacity style={styles.recoverPasswordTextWrapper}>
           <Text
@@ -61,13 +113,7 @@ const Signup = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <FormButton
-          title="Register"
-          onPress={(e) => {
-            e.preventDefault();
-            register(email, password);
-          }}
-        />
+        <FormButton title="Register" onPress={handleSubmit(onSubmit)} />
 
         <Line />
 
@@ -149,4 +195,9 @@ const styles = StyleSheet.create({
   specialColorText: {
     color: "#7E57C2",
   },
+
+  errorText: {
+    color: "#f74444",
+    textAlign: "left",
+  }
 });
