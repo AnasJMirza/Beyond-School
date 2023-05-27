@@ -1,0 +1,3 @@
+1. add picture, firstname, lastname, email, password, role in signup screen.
+2. fetch mentors to display in home screen.
+3. build the ui of the schools screen.

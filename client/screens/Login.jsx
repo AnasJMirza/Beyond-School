@@ -1,11 +1,5 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormButton from "../components/FormButton";
@@ -38,6 +32,7 @@ const Login = ({ navigation }) => {
     setModalVisible(true);
     try {
       const response = await axios.post("/user/login", data);
+      await AsyncStorage.setItem("user", JSON.stringify(response?.data?.response));
       setUser(response?.data?.response);
       const title = "Login Successful";
       toaster(title, "success", toast);
@@ -53,10 +48,7 @@ const Login = ({ navigation }) => {
   return (
     // <ScrollView>
     <SafeAreaView style={styles.container}>
-      <Image
-        source={require("../assets/main/logo-transparent.png")}
-        style={styles.imageDimensions}
-      />
+      <Image source={require("../assets/main/logo-transparent.png")} style={styles.imageDimensions} />
       <View>
         <Text style={styles.heading}>Hello Again!</Text>
       </View>
@@ -104,9 +96,7 @@ const Login = ({ navigation }) => {
       />
       {errors.password && (
         <View style={{ width: "100%", marginTop: -8 }}>
-          <Text style={styles.errorText}>
-            Password must be 8 characters long.
-          </Text>
+          <Text style={styles.errorText}>Password must be 8 characters long.</Text>
         </View>
       )}
       <TouchableOpacity style={styles.recoverPasswordTextWrapper}>
@@ -123,10 +113,7 @@ const Login = ({ navigation }) => {
             title="Sign In with Google"
             iconUrl="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
           />
-          <SocialButton
-            title="Sign In with Facebook"
-            iconUrl="https://www.facebook.com/images/fb_icon_325x325.png"
-          />
+          <SocialButton title="Sign In with Facebook" iconUrl="https://www.facebook.com/images/fb_icon_325x325.png" />
         </>
       )}
 
