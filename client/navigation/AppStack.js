@@ -5,6 +5,8 @@ import ProfileScreen from "./ProfileScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawer from "../components/CustomDrawer";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Universities from "../screens/Universities";
+import SettingsScreen from "../screens/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 // const Tab = createMaterialBottomTabNavigator();
@@ -41,6 +43,20 @@ export default function AppStack() {
         component={ProfileScreen}
         options={{
           drawerIcon: ({ focused, color, size }) => <Ionicons name="person-outline" size={size} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Universities"
+        component={Universities}
+        options={{
+          drawerIcon: ({ focused, color, size }) => <Ionicons name="school-outline" size={size} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          drawerIcon: ({ focused, color, size }) => <Ionicons name="settings-outline" size={size} color={color} />,
         }}
       />
     </Drawer.Navigator>

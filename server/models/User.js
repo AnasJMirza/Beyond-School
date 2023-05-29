@@ -18,28 +18,56 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
 
-  avatar: {
+  profile: {
     type: String,
     default: "",
   },
 
   role: {
     type: String,
-    required: true,
+    default: "student",
   },
 
-  verified: {
+  varified: {
     type: Boolean,
     default: false,
-    required: true,
-  }
+  },
+
+  speciality: {
+    type: String,
+    default: "N/A",
+  },
+
+  experience: {
+    type: Number,
+    default: 0,
+  },
+
+  designation: {
+    type: String,
+    default: "N/A",
+  },
+
+  rating: {
+    type: String,
+    default: "N/A",
+  },
+
+  country: {
+    type: String,
+    default: "Paksitan",
+  },
+
+  meeting: {
+    type: Array,
+    default: [],
+  },
 });
 
 // Hashing password before saving
 UserSchema.pre("save", async function (next) {
   const user = this;
-  if (user.isModified("password"))
-    user.password = await bcrypt.hash(user.password, 8);
+  if (user.isModified("password")) user.password = await bcrypt.hash(user.password, 8);
   next();
 });
 

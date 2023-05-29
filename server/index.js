@@ -3,12 +3,14 @@ import * as dotenv from 'dotenv';
 import connectDatabase from './database/connection.js';
 import User from './models/User.js';
 import userRouter from './routes/user.js';
+import cors from 'cors';
 
 
 
 // Application Configurations
 const app = express();
 dotenv.config();
+app.use(cors());
 app.use(express.json());
 
 

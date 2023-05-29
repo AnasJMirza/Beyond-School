@@ -29,16 +29,16 @@ const Login = ({ navigation }) => {
     },
   });
   const onSubmit = async (data) => {
-    setModalVisible(true);
     try {
+      setModalVisible(true);
       const response = await axios.post("/user/login", data);
       await AsyncStorage.setItem("user", JSON.stringify(response?.data?.response));
       setUser(response?.data?.response);
       const title = "Login Successful";
       toaster(title, "success", toast);
     } catch (error) {
-      console.log(error);
-      const title = error?.response?.data;
+      console.log("error", error?.response?.data?.error);
+      const title = error?.response?.data?.error;
       toaster(title, "error", toast);
     } finally {
       setModalVisible(false);
@@ -58,6 +58,9 @@ const Login = ({ navigation }) => {
         control={control}
         rules={{
           required: true,
+          pattern: {
+            value: /\S+@\S+\.\S+/,
+          },
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <FormInput

@@ -7,6 +7,8 @@ import { Controller, useForm } from "react-hook-form";
 import FreeMentorCard from "../components/FreeMentorCard";
 import { ScrollView } from "native-base";
 import axios from "../axios";
+import ProMentorCard from "../components/ProMentorCard";
+import MeetingCard from "../components/MeetingCard";
 
 const Home = ({ navigation }) => {
   // function to add suffix with the current date
@@ -60,90 +62,108 @@ const Home = ({ navigation }) => {
     fetchMentors();
   }, []);
 
+  console.log(mentors);
+
   const { user, setUser } = useContext(UserContext);
   console.log("-->", user);
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Profile Section Details */}
-      <View style={styles.profileDetailsSection}>
-        <View style={styles.userInformation}>
-          <View>
-            <Text style={styles.profileDate}>{formattedDateWithSuffix}</Text>
-            <Text style={styles.profileGreetings}>Hello, {user.name}</Text>
-          </View>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            {user?.profile ? (
-              <Image
-                source={{
-                  uri: user?.profile,
+    <>
+      {user.role == "mentor" ? (
+        <SafeAreaView>
+          <Text
+            style={{ fontFamily: "Roboto_700Bold", color: "#212121", fontSize: 30, marginVertical: 10, marginLeft: 10 }}
+          >
+            All Meetings
+          </Text>
+          <ScrollView style={{ paddingBottom: 20 }}>
+            <MeetingCard />
+            <MeetingCard />
+            <MeetingCard />
+            <MeetingCard />
+            <MeetingCard />
+            <MeetingCard />
+            <MeetingCard />
+          </ScrollView>
+        </SafeAreaView>
+      ) : (
+        <SafeAreaView style={styles.container}>
+          {/* Profile Section Details */}
+          <View style={styles.profileDetailsSection}>
+            <View style={styles.userInformation}>
+              <View>
+                <Text style={styles.profileDate}>{formattedDateWithSuffix}</Text>
+                <Text style={styles.profileGreetings}>Hello, {user.name}</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                {user?.profile ? (
+                  <Image
+                    source={{
+                      uri: user?.profile,
+                    }}
+                    style={styles.imageDimensions}
+                  />
+                ) : (
+                  <Image source={require(`../assets/anas-ai.jpeg`)} style={styles.imageDimensions} />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View>
+              <Controller
+                name="searchTerm"
+                control={control}
+                rules={{
+                  required: true,
                 }}
-                style={styles.imageDimensions}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <FormInput
+                    placeholder="Search for mentors"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                  />
+                )}
               />
-            ) : (
-              <Image source={require(`../assets/anas-ai.jpeg`)} style={styles.imageDimensions} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <View>
-          <Controller
-            name="searchTerm"
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <FormInput
-                placeholder="Search for mentors"
-                autoCapitalize="none"
-                autoCorrect={false}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
-          />
-        </View>
-      </View>
+            </View>
+          </View>
 
-      <View style={{ flex: 3, marginHorizontal: 8 }}>
-        <ScrollView>
-          <View>
-            <Text style={styles.heading}>Explore Mentors 👨‍🏫</Text>
-            <ScrollView horizontal={true}>
-              {mentors.map((mentor) => (
-                <TouchableOpacity>
-                  <FreeMentorCard mentor={mentor} />
-                </TouchableOpacity>
-              ))}
+          <View style={{ flex: 3, marginHorizontal: 8 }}>
+            <ScrollView>
+              <View>
+                <Text style={styles.heading}>Explore Mentors 👨‍🏫</Text>
+                <ScrollView horizontal={true}>
+                  {mentors.map((mentor, index) => {
+                    if (!mentor.varified) {
+                      return (
+                        <TouchableOpacity key={index} onPress={() => navigation.navigate("mentor", mentor)}>
+                          <FreeMentorCard mentor={mentor} />
+                        </TouchableOpacity>
+                      );
+                    }
+                  })}
+                </ScrollView>
+              </View>
+
+              <Text style={styles.heading}>Varified Mentors 🏫👨‍🏫</Text>
+
+              <View>
+                {mentors.map((mentor, index) => {
+                  if (mentor.varified) {
+                    return (
+                      <TouchableOpacity key={index} onPress={() => navigation.navigate("mentor", mentor)}>
+                        <ProMentorCard mentor={mentor} />
+                      </TouchableOpacity>
+                    );
+                  }
+                })}
+              </View>
             </ScrollView>
           </View>
-
-          <Text style={styles.heading}>Varified Mentors 🏫👨‍🏫</Text>
-
-          <TouchableOpacity onPress={() => navigation.navigate("mentor")}>
-            <View style={styles.proMentorsDetails}>
-              <Text>Orignal Mentor</Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.proMentorsDetails}>
-            <Text>Anas</Text>
-          </View>
-          <View style={styles.proMentorsDetails}>
-            <Text>Anas</Text>
-          </View>
-          <View style={styles.proMentorsDetails}>
-            <Text>Anas</Text>
-          </View>
-          <View style={styles.proMentorsDetails}>
-            <Text>Anas</Text>
-          </View>
-          <View style={styles.proMentorsDetails}>
-            <Text>Anas</Text>
-          </View>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+        </SafeAreaView>
+      )}
+    </>
   );
 };
 

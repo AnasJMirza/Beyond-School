@@ -15,7 +15,13 @@ const FreeMentorCard = ({ mentor }) => {
       ) : (
         <Image source={require("../assets/anas-ai.jpeg")} style={styles.imageDimentions} />
       )}
-      <Text>{mentor?.name}</Text>
+      <View style={styles.textContainer}>
+        <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 20, color: "#fff" }}>{mentor?.name}</Text>
+        <View style={styles.subText}>
+          <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 14, color: "#fff" }}>{mentor?.speciality}</Text>
+          <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 14, color: "#fff" }}>{mentor?.rating}</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -24,7 +30,7 @@ export default FreeMentorCard;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#66ca62",
+    backgroundColor: "#7E57C2",
     width: 130,
     height: 150,
     borderRadius: 8,
@@ -37,5 +43,17 @@ const styles = StyleSheet.create({
     height: 100,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
+  },
+
+  textContainer: {
+    paddingHorizontal: 5,
+    paddingTop: 2,
+  },
+
+  subText: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
   },
 });

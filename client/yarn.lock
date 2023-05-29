@@ -2332,10 +2332,10 @@
     prompts "^2.4.0"
     semver "^6.3.0"
 
-"@react-native-community/datetimepicker@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-7.1.0.tgz#627c2be65256c87b25bef0ca373e0d2aae69ece5"
-  integrity sha512-bXK1/UnutKgJMbHKcbh6TQN3GmzOWROo6Hc9z6tfVG6KIwq5MrdvxZTFJA97PB6xwW8p3v9ddkaSfkFa1pelPA==
+"@react-native-community/datetimepicker@6.7.3":
+  version "6.7.3"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-6.7.3.tgz#e6d75a42729265d8404d1d668c86926564abca2f"
+  integrity sha512-fXWbEdHMLW/e8cts3snEsbOTbnFXfUHeO2pkiDFX3fWpFoDtUrRWvn50xbY13IJUUKHDhoJ+mj24nMRVIXfX1A==
   dependencies:
     invariant "^2.2.4"
 
@@ -3661,6 +3661,11 @@ cliui@^8.0.1:
     strip-ansi "^6.0.1"
     wrap-ansi "^7.0.0"
 
+clone-date@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/clone-date/-/clone-date-1.0.3.tgz#6cf857c0c0c45203726e626743c2dc96b116a998"
+  integrity sha512-DNdiKNWa/31TZwnmjrS8oQII5C6G5/aZPYE2z2hTqFUBTnv3u4WMW9ae00Ai/n9rhGFejRKECF8PqhA0FUWmfA==
+
 clone-deep@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/clone-deep/-/clone-deep-4.0.1.tgz#c19fd9bdbbf85942b4fd979c84dcf7d5f07c2387"
@@ -4360,6 +4365,11 @@ expo-constants@~14.2.0, expo-constants@~14.2.1:
   dependencies:
     "@expo/config" "~8.0.0"
     uuid "^3.3.2"
+
+expo-datepicker@^1.0.23:
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/expo-datepicker/-/expo-datepicker-1.0.23.tgz#892a2c8d7629d3f6a9581031e0502cb3262af448"
+  integrity sha512-LoOgrbd/SvU/gJN886LOxLy0FctyykyZ+hqpORyM6DqLw+c9v4HwgRragIjUdN+Qzf/HYlbr9S9gEnJNHPX79w==
 
 expo-file-system@~15.2.0, expo-file-system@~15.2.2:
   version "15.2.2"
@@ -5709,6 +5719,11 @@ lodash.uniqueid@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/lodash.uniqueid/-/lodash.uniqueid-4.0.1.tgz#3268f26a7c88e4f4b1758d679271814e31fa5b26"
   integrity sha512-GQQWaIeGlL6DIIr06kj1j6sSmBxyNMwI8kaX9aKpHR/XsMTiaXDVPNPAkiboOTK9OJpTJF/dXT3xYoFQnj386Q==
+
+lodash@4.15.0:
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.15.0.tgz#3162391d8f0140aa22cf8f6b3c34d6b7f63d3aa9"
+  integrity sha512-/XM2P+O3xDTOR/CrI4ZqqzgC3tFOLfn2sUIIKN9CYI3YmZnZ9QcElpYh0MHiHXMNJLWwbVxkCaO6zFGS97Xj0g==
 
 lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.4:
   version "4.17.21"
@@ -8030,6 +8045,14 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
+
+time-picker@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/time-picker/-/time-picker-1.0.0.tgz#06b0ae848f1fedc776940e81f2003846a89832de"
+  integrity sha512-jMskcwoxX7AO389GGmaIArX8W1JVR/Ac7Dc61nnLEqrP5ua3h8nRntMGMiLAXm8KiyQ8LH/jGU6Da9v1FVBT0g==
+  dependencies:
+    clone-date "1.0.3"
+    lodash "4.15.0"
 
 tinycolor2@^1.4.1, tinycolor2@^1.4.2:
   version "1.6.0"
