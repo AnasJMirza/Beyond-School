@@ -15,6 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 const Signup = ({ navigation }) => {
   const toast = useToast();
 
+  const [loader, setLoader] = useState(false);
   const [image, setImage] = useState(null);
   const [role, setRole] = useState("student");
   const [cloudinaryImage, setCloudinaryImage] = useState(null);
@@ -37,6 +38,7 @@ const Signup = ({ navigation }) => {
 
   const uploadProfileImage = async (uri) => {
     try {
+      setLoader(true);
       const formData = new FormData();
       formData.append("image", {
         uri: uri,
@@ -56,6 +58,8 @@ const Signup = ({ navigation }) => {
       setCloudinaryImage(response?.data?.imageUrl);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -74,6 +78,7 @@ const Signup = ({ navigation }) => {
 
   const onSubmit = async (data) => {
     try {
+      setLoader(true);
       const response = await axios.post("/user/register", { ...data, profile: cloudinaryImage });
       navigation.navigate("login");
       const title = "Account Created Successfully";
@@ -83,6 +88,8 @@ const Signup = ({ navigation }) => {
       console.log(error);
       const title = error?.response?.data?.error;
       toaster(title, "error", toast);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -130,6 +137,9 @@ const Signup = ({ navigation }) => {
           control={control}
           rules={{
             required: true,
+            pattern: {
+              value: /\S+@\S+\.\S+/,
+            },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <FormInput
@@ -211,7 +221,7 @@ const Signup = ({ navigation }) => {
 
         {progress == 1 ? (
           <View style={{ position: "relative", zIndex: -1, width: "100%" }}>
-            <FormButton title="Register" onPress={handleSubmit(onSubmit)} />
+            <FormButton title="Register" loader={loader} onPress={handleSubmit(onSubmit)} />
           </View>
         ) : (
           <View style={{ position: "relative", zIndex: -1, width: "100%" }}>

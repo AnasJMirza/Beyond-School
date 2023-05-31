@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ScrollView } from "native-base";
@@ -13,10 +13,12 @@ const Mentor = ({ navigation }) => {
   const route = useRoute();
   const mentor = route.params;
 
+  const [loader, setLoader] = useState(false);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [text, setText] = useState("empty");
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -40,15 +42,26 @@ const Mentor = ({ navigation }) => {
       userName: user.name,
       userEmail: user.email,
       mentorId: mentor._id,
+      mentorEmail: mentor.email,
     };
 
     try {
+      setLoader(true);
       const res = await axios.post("/user/request-meeting", data);
-      console.log("res", res?.data);
+      console.log("res", res?.data?.meeting);
+      setIsDisabled(true);
+      setTimeout(() => {
+        setIsDisabled(false);
+      }, 30 * 60 * 1000); // 30 minutes in milliseconds
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoader(false);
     }
   };
+
+  console.log(user?.upgrade);
+  console.log(mentor?.varified);
 
   return (
     <ScrollView>
@@ -121,9 +134,30 @@ const Mentor = ({ navigation }) => {
             )}
           </View>
 
-          <TouchableOpacity style={styles.requestButton} onPress={() => requestMeeting()}>
-            <Text style={styles.requestText}>Request Meeting</Text>
-          </TouchableOpacity>
+          {mentor?.varified && !user?.upgrade ? (
+            <TouchableOpacity style={styles.requestButton} onPress={() => navigation.openDrawer()}>
+              <Text style={styles.requestText}>Upgrade Now</Text>
+            </TouchableOpacity>
+          ) : (
+            <>
+              {isDisabled ? (
+                <TouchableOpacity
+                  style={styles.requestButton}
+                  onPress={() => alert("You can request again after 30 minutes")}
+                >
+                  <Text style={styles.requestText}>Requested</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity style={styles.requestButton} onPress={() => requestMeeting()}>
+                  {loader ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.requestText}>Request Meeting</Text>
+                  )}
+                </TouchableOpacity>
+              )}
+            </>
+          )}
         </View>
       </SafeAreaView>
     </ScrollView>

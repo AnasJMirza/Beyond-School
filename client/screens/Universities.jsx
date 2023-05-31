@@ -29,7 +29,7 @@ const Universities = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.bg}>
         <Text style={{ fontSize: 30, fontFamily: "Roboto_400Regular", color: "#fff", letterSpacing: 14 }}>
-          Beyond School
+          What Next
         </Text>
       </View>
       <TouchableOpacity onPress={() => navigation.openDrawer()}>

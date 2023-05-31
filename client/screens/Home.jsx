@@ -65,25 +65,37 @@ const Home = ({ navigation }) => {
   console.log(mentors);
 
   const { user, setUser } = useContext(UserContext);
-  console.log("-->", user);
+
+  console.log("-->", user?.meeting);
 
   return (
     <>
       {user.role == "mentor" ? (
-        <SafeAreaView>
+        <SafeAreaView
+          style={{
+            flex: 1,
+            backgroundColor: "#fff",
+            paddingHorizontal: 0,
+            paddingVertical: 10,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Text
             style={{ fontFamily: "Roboto_700Bold", color: "#212121", fontSize: 30, marginVertical: 10, marginLeft: 10 }}
           >
             All Meetings
           </Text>
-          <ScrollView style={{ paddingBottom: 20 }}>
-            <MeetingCard />
-            <MeetingCard />
-            <MeetingCard />
-            <MeetingCard />
-            <MeetingCard />
-            <MeetingCard />
-            <MeetingCard />
+          <ScrollView style={{ paddingBottom: 20, width: "100%" }}>
+            {user?.meeting?.length > 0 ? (
+              <>
+                {user?.meeting?.map((meeting, index) => {
+                  return <MeetingCard key={index} meeting={meeting} />;
+                })}
+              </>
+            ) : (
+              <Text>No Meetings</Text>
+            )}
           </ScrollView>
         </SafeAreaView>
       ) : (

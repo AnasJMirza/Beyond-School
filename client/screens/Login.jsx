@@ -14,7 +14,7 @@ import { UserContext } from "../navigation/Routes";
 import { toaster } from "../utils/helper";
 
 const Login = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [loader, setLoader] = useState(false);
   const toast = useToast();
   const { setUser } = useContext(UserContext);
 
@@ -30,18 +30,20 @@ const Login = ({ navigation }) => {
   });
   const onSubmit = async (data) => {
     try {
-      setModalVisible(true);
+      setLoader(true);
       const response = await axios.post("/user/login", data);
       await AsyncStorage.setItem("user", JSON.stringify(response?.data?.response));
       setUser(response?.data?.response);
       const title = "Login Successful";
       toaster(title, "success", toast);
+      // console.log(response?.data?.response?.name);
     } catch (error) {
-      console.log("error", error?.response?.data?.error);
+      console.log(error);
+      console.log("error1", error?.response?.data?.error);
       const title = error?.response?.data?.error;
       toaster(title, "error", toast);
     } finally {
-      setModalVisible(false);
+      setLoader(false);
     }
   };
 
@@ -106,7 +108,7 @@ const Login = ({ navigation }) => {
         <Text style={styles.recoverPasswordText}>Recover password</Text>
       </TouchableOpacity>
 
-      <FormButton title="Sign in" onPress={handleSubmit(onSubmit)} />
+      <FormButton title="Sign in" loader={loader} onPress={handleSubmit(onSubmit)} />
 
       <Line />
 
@@ -128,30 +130,6 @@ const Login = ({ navigation }) => {
       </View>
 
       {/* Modal */}
-
-      {modalVisible && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            // backgroundColor: "#f5f0ff",
-            // opacity: 0.4,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 1,
-            direction: "column",
-          }}
-        >
-          <Spinner size="lg" color="#7E57C2" />
-          <Heading color="#7E57C2" fontSize="lg">
-            Loading
-          </Heading>
-        </View>
-      )}
     </SafeAreaView>
     // </ScrollView>
   );

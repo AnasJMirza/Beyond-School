@@ -12,11 +12,22 @@ const ProMentorCard = ({ mentor }) => {
           style={styles.imageDimention}
         />
       </View>
-      <View style={{ marginTop: 10 }}>
-        <Text style={{ fontFamily: "Roboto_700Bold", fontSize: 29, color: "#fff" }}>{mentor?.name}</Text>
-        <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>{mentor?.speciality}</Text>
-        <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>{mentor?.experience} years</Text>
-        <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>{mentor?.rating}</Text>
+      <View style={{ marginTop: 10, width: "44%" }}>
+        <Text style={{ fontFamily: "Roboto_700Bold", fontSize: 29, color: "#fff", marginBottom: 10 }}>
+          {mentor?.name}
+        </Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 30 }}>
+          <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>Speciality</Text>
+          <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>{mentor?.speciality}</Text>
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 30 }}>
+          <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>Experience</Text>
+          <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>{mentor?.experience}</Text>
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 30 }}>
+          <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>Rating</Text>
+          <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 19, color: "#fff" }}>{mentor?.rating}</Text>
+        </View>
       </View>
     </View>
   );
